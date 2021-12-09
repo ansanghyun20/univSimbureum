@@ -30,7 +30,7 @@ export default function Authentication(props) {
         
       </View>
       <View style={styles.buttons}>
-      <Button title="비밀번호 찾기" onPress={() => props.findPassword(email)} />
+      <Button title="비밀번호 변경" onPress={() => props.findPassword(email)} />
       </View>
       
     </View>
