@@ -7,9 +7,8 @@ import Authenticated from './screens/Authenticated';
 export default function App() {
   const [authenticated, setAuthenticated] = useState(false);
 
-  var user = auth().currentUser;
-  try{
-    
+  const [authEmailVerified, setauthEmailVerified] = useState(false);
+
     auth().onAuthStateChanged((user) => {
       if (user) {
         setAuthenticated(true);
@@ -18,9 +17,7 @@ export default function App() {
         setAuthenticated(false);
       }
     });
-  }catch(e){
-    console.log("존재하지 않는 아이디");
-  }
+
   
 
   const createUser = (email, password) => {
@@ -39,10 +36,12 @@ export default function App() {
   const signin = (email, password) => {
       auth().signInWithEmailAndPassword(email, password)
       .then(()=>{
-        //var user = auth().currentUser;
-        console.log(email);
-        console.log("존재하는 아이디");
-        //openMainPage(user);
+        var user = auth().currentUser;
+        if (user.emailVerified){
+          setauthEmailVerified(true);
+        }else{
+          setauthEmailVerified(false);
+        }
       })
       .catch(error =>{
         if (error.code === 'auth/email-already-in-use') {
@@ -77,19 +76,15 @@ export default function App() {
   };
 
 
- // const openMainPage =(user) =>{
     
-    if (authenticated) {
-      
-      if (user.emailVerified){
-        console.log("hello");
-        return <Authenticated />;
-      }else{
-        console.log("Not Email Verified");
+    if (authenticated) { 
+      if(authEmailVerified){
+        return <Authenticated/>
+      }
+      else{
+        console.log("이메일 인증을 진행해 주세요.");
       }
     }
-  //}
-  
 
   return <Authentication  
           signin={signin} 
