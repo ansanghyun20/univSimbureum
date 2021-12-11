@@ -32,7 +32,7 @@ export default function Authentication(props) {
       <View style={styles.buttons}>
       <Button title="비밀번호 변경" onPress={() => props.findPassword(email)} />
       </View>
-      
+      <Button title="버튼" onPress={() => props.hello()} />
     </View>
   );
 }

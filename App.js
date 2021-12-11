@@ -36,6 +36,7 @@ export default function App() {
   const signin = (email, password) => {
       auth().signInWithEmailAndPassword(email, password)
       .then(()=>{
+        
         var user = auth().currentUser;
         if (user.emailVerified){
           setauthEmailVerified(true);
@@ -75,7 +76,9 @@ export default function App() {
     }
   };
 
-
+  const hello = () =>{
+    console.log("hello");
+  }
     
     if (authenticated) { 
       if(authEmailVerified){
@@ -90,5 +93,6 @@ export default function App() {
           signin={signin} 
           createUser={createUser} 
           findPassword={findPassword}
+          hello = {hello}
         />;
 }
