@@ -1,8 +1,8 @@
-import auth from '@react-native-firebase/auth';
-import React, { useState } from 'react';
+import auth from '@react-native-firebase/auth'; //인증
+import React, { useState, useEffect } from 'react';
 import Authentication from './screens/Authentication';
 import Authenticated from './screens/Authenticated';
-
+import firestore from '@react-native-firebase/firestore'; //DB
 
 export default function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -18,7 +18,38 @@ export default function App() {
       }
     });
 
-  
+
+
+    // 조회
+    const todos = firestore().collection('todos').get();
+    function Todo() {
+      
+          firestore()
+          .collection('todos')
+          //.where("title","==","hello")
+          .get()
+          .then(querySnapshot => {
+            console.log('Total users: ', querySnapshot.size);
+
+            querySnapshot.forEach(documentSnapshot => {
+              console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+            });
+          });
+    }
+
+    // 
+    const ref = firestore().collection('todos');
+    async function addTodo() {
+      await ref.add({
+        title: todo,
+        complete: false,
+      });
+      setTodo('');
+    }
+
+
+
+
 
   const createUser = (email, password) => {
     try {
@@ -32,6 +63,11 @@ export default function App() {
       alert(error);
     }
   };
+  
+  //  1. 로그인 auth                     email
+  //  2. 회원가입은 auth, firestore        
+  //  비밀번호 찾기 firestore
+  //  3. 조회 firestore                  email -> data
 
   const signin = (email, password) => {
       auth().signInWithEmailAndPassword(email, password)
@@ -80,6 +116,9 @@ export default function App() {
     console.log("hello");
   }
     
+
+
+
     if (authenticated) { 
       if(authEmailVerified){
         return <Authenticated/>
@@ -88,11 +127,12 @@ export default function App() {
         console.log("이메일 인증을 진행해 주세요.");
       }
     }
-
+    //audrbs1028@naver.com
   return <Authentication  
           signin={signin} 
           createUser={createUser} 
           findPassword={findPassword}
           hello = {hello}
+          Todo = {Todo}
         />;
 }
