@@ -5,7 +5,7 @@ import Styled from 'styled-components/native';
 export default function Authentication(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [name, setName] = useState('');
   return (
     <View style={styles.screen}>
       <Text style={styles.title}>로그인 회원가입</Text>
@@ -24,9 +24,15 @@ export default function Authentication(props) {
         placeholder="Password"
         secureTextEntry={true}
       />
+      <TextInput
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+        placeholder="Name"
+      />
       <View style={styles.buttons}>
         <Button title="로그인" onPress={() => props.signin(email, password)} />
-        <Button title="회원가입" onPress={() => props.createUser(email, password)} />
+        <Button title="회원가입" onPress={() => props.createUser(email, password, name)} />
         
       </View>
       <View style={styles.buttons}>

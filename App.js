@@ -20,45 +20,43 @@ export default function App() {
       }
     });
 
-
-
     // 조회
-    const todos = firestore().collection('todos').get();
+   
     function Todo() {
       
           firestore()
-          .collection('todos')
-          //.where("title","==","hello")
+          .collection('USER')
+          .where("Email","==","ansanghyun20@naver.com")
           .get()
           .then(querySnapshot => {
             console.log('Total users: ', querySnapshot.size);
-
+            // documentSnapshot.id,
             querySnapshot.forEach(documentSnapshot => {
-              console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+              //console.log('User ID: ',  documentSnapshot.data().Email);
+              console.log('Name: ',  documentSnapshot.data().Name);
             });
           });
     }
 
-    // 
 
-
-
-
-
-
-  const createUser = (email, password) => {
+  const createUser = (email, password, name) => {
     try {
-
-      firestore().collection('USER').add({
-        Email: email,
-        age: 30,
-        })
-        .catch(error =>{
-          console.log(error);
-        });
       
+      // 계성 생성 및 이메일 전송
       auth().createUserWithEmailAndPassword(email, password)
       .then((userCredential)=>{
+
+      // 데이터베이스에 삽입
+      firestore().collection('USER').add({
+        Email: email,
+        Name: name,
+        age: 15,
+      })
+      .catch(error =>{
+          console.log(error);
+      });
+
+
         userCredential.user?.sendEmailVerification();
         //auth().signOut();
         alert("Email sent");
@@ -66,6 +64,9 @@ export default function App() {
       .catch(error =>{
         console.log(error);
       });
+
+
+
 
     } catch (error) {
       alert(error);
@@ -141,5 +142,6 @@ export default function App() {
           createUser={createUser} 
           findPassword={findPassword}
           hello = {hello}
+          Todo ={Todo}
         />;
 }
