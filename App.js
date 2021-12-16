@@ -9,6 +9,8 @@ export default function App() {
 
   const [authEmailVerified, setauthEmailVerified] = useState(false);
 
+  
+
     auth().onAuthStateChanged((user) => {
       if (user) {
         setAuthenticated(true);
@@ -38,14 +40,7 @@ export default function App() {
     }
 
     // 
-    const ref = firestore().collection('todos');
-    async function addTodo() {
-      await ref.add({
-        title: todo,
-        complete: false,
-      });
-      setTodo('');
-    }
+
 
 
 
@@ -53,12 +48,25 @@ export default function App() {
 
   const createUser = (email, password) => {
     try {
+
+      firestore().collection('USER').add({
+        Email: email,
+        age: 30,
+        })
+        .catch(error =>{
+          console.log(error);
+        });
+      
       auth().createUserWithEmailAndPassword(email, password)
       .then((userCredential)=>{
         userCredential.user?.sendEmailVerification();
-        auth().signOut();
+        //auth().signOut();
         alert("Email sent");
+      })
+      .catch(error =>{
+        console.log(error);
       });
+
     } catch (error) {
       alert(error);
     }
@@ -133,6 +141,5 @@ export default function App() {
           createUser={createUser} 
           findPassword={findPassword}
           hello = {hello}
-          Todo = {Todo}
         />;
 }
