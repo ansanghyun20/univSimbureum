@@ -6,24 +6,27 @@ import firestore from '@react-native-firebase/firestore';
 import RegisterScreen from '../screens/RegisterScreen';
 
 export default RegisterAction = (props) => {
-    const [nameErr, setNameErr] = useState("이름을 입력해주세요.")
+    const [nameErr, setNameErr] = useState("")
     const [isDuplicatedName, setDuplicatedName] = useState(false)
     const [nameIsEdited, setNameEdited] = useState(false)
 
-    const [emailErr, setEmailErr] = useState("이메일를 입력해주세요.")
+    const [emailErr, setEmailErr] = useState("")
     const [emailIsEdited, setEmailEdited] = useState(false)
 
-    const [pwErr, setPwErr] = useState("비밀번호를 입력해주세요.")
+    const [pwErr, setPwErr] = useState("")
     const [pwIsEdited, setPwEdited] = useState(false)
 
-    const [rePwErr, setRePwErr] = useState("비밀번호 재확인을 입력해주세요.")
+    const [rePwErr, setRePwErr] = useState("")
     const [rePwIsEdited, setRePwEdited] = useState(false)
 
-    const users = firestore().collection('USER')
+    const users = firestore().collection('Users')
     // useEffect 시작
     // 각종 Err 변경을 실시간 감지
       useEffect(()=>{ 
         console.log("이름 에러 : " + nameErr);
+        if (null == ""){
+            console.log("hello")
+        }
         console.log("----------------------------");
       }, [nameErr])
 
@@ -43,14 +46,23 @@ export default RegisterAction = (props) => {
         console.log("재확인 비번 에러 : " + rePwErr);
         console.log("----------------------------");
       }, [rePwErr])  
+
+      useEffect(()=>{ 
+        if(isDuplicatedName) {
+            setNameErr('이미 사용 중인 이름입니다.');
+        }
+        console.log("중복 에러 : " + isDuplicatedName);
+        console.log("----------------------------");
+      }, [isDuplicatedName])
       // useEffect 종료
+    
+
 
     const validateName = (nickname) => {
 
         var nicknameReg  =  /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/
         setNameEdited(true)
 
-        // 닉네임 중복 검사
         users
         .where('nickname', '==', nickname)
         .get()
@@ -59,18 +71,18 @@ export default RegisterAction = (props) => {
                 setDuplicatedName(true);
             } else {
                 setDuplicatedName(false);
+                if(!nickname) {
+                    setNameErr('이름을 입력해주세요.');
+                }
+                else if(!nicknameReg.test(nickname)){
+                    setNameErr('글자 수 (2~20자 이내)');
+                }else {
+                    setNameErr(null);
+                }
             }
         })
         
-        if(!nickname) {
-            setNameErr('이름을 입력해주세요.');
-        } else if(isDuplicatedName) {
-            setNameErr('이미 사용 중인 이름입니다.');
-        } else if(!nicknameReg.test(nickname)){
-            setNameErr('글자 수 (2~20자 이내)');
-        } else {
-            setNameErr(null);
-        }
+        
         
         console.log("이름 : " + nickname);
         console.log("----------------------------");
@@ -128,15 +140,16 @@ export default RegisterAction = (props) => {
     }
 
     const createUser = (nickname, email, password, confirmPassword) => {
-        validateName(nickname)
-        validateEmail(email)
-        validatePassword(password)
-        validateRePassword(password, confirmPassword)
-        console.log("email : "+ email + "password : "+ password);
-        console.log("nameErr : "+ nameErr + "emailErr : "+ emailErr);
-        console.log("pwErr : "+ pwErr + "rePwErr : "+ rePwErr);
+        validateName(nickname);
+        validateEmail(email);
+        validatePassword(password);
+        validateRePassword(password, confirmPassword);
+        // console.log("email : "+ email + "password : "+ password);
+        // console.log("nameErr : "+ nameErr + "emailErr : "+ emailErr);
+        // console.log("pwErr : "+ pwErr + "rePwErr : "+ rePwErr);
         console.log("회원가입 기능 실행")
-        if(!email || !password || nameErr || emailErr || pwErr || rePwErr) {
+
+        if(!nickname || !confirmPassword || !email || !password || nameErr || emailErr || pwErr || rePwErr) {
             console.log("통과 X")
             return false;
         } else {
@@ -145,10 +158,9 @@ export default RegisterAction = (props) => {
             // auth로 이메일, 비밀번호 회원가입
             .createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                // firestore에 이메일, 닉네임, 등급 저장
+                // firestore에 이메일, 닉네임, 등급 저장 (이부분 수정 필요)
                 users
-                .doc(email.substr(0,8))
-                .set({
+                .add({
                     email: email,
                     nickname: nickname,
                     grade: 1,
@@ -157,10 +169,10 @@ export default RegisterAction = (props) => {
                     console.log('User added!');
                 })
                 .catch(error => {console.error(error);})
-
+                auth().signOut();
                 // 인증 메일 전송
                 userCredential.user?.sendEmailVerification();
-                auth().signOut();
+                //auth().signOut();
                 Alert.alert(
                     "이메일 인증",
                     "인증 메일을 전송하였습니다.\n전송된 이메일의 링크를 클릭하면 회원가입이 완료됩니다.",

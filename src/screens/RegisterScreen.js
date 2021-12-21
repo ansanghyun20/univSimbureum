@@ -7,8 +7,10 @@ import Container from '../components/Container';
 
 export default RegisterScreen = (props) => {
 
+  const [nicknameFocus, setNicknameFocus] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
-  const [pwFocus, setPwFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
+  const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
 
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
@@ -17,23 +19,32 @@ export default RegisterScreen = (props) => {
   
   // useEffect 시작
   // 입력 항목을 실시간으로 감지 하면서 해당하는 함수를 호출
+
   useEffect(()=>{ 
-    props.validateName(nickname)
+    if(nicknameFocus){
+      props.validateName(nickname)
+    }
   }, [nickname])
 
   useEffect(()=>{ 
-    props.validateEmail(email)
+    if(emailFocus){
+      props.validateEmail(email)
+    }
   }, [email])
 
   useEffect(()=>{ 
-    props.validatePassword(password)
+    if(passwordFocus){
+      props.validatePassword(password)
+    }
   }, [password])
 
   useEffect(()=>{ 
-    props.validateRePassword(password, confirmPassword)
+    if(confirmPasswordFocus){
+      props.validateRePassword(password, confirmPassword)
+    }
   }, [confirmPassword])
   // useEffect 종료
-
+  
   return (
     <Container>
       <View style={styles.titleWrapper}>
@@ -48,7 +59,8 @@ export default RegisterScreen = (props) => {
           autoCapitalize='none'
           autoCorrect={false}
           blurOnSubmit={false}
-          //onBlur={() => {props.validateName(nickname)}}
+          onBlur={() => {setNicknameFocus(false)}}
+          onFocus={() => {setNicknameFocus(true)}}
           onChangeText={text => {setNickname(text)}}
           onSubmitEditing={() => {this.secondTextInput.focus()}}
           selectionColor="#292929"
@@ -66,7 +78,7 @@ export default RegisterScreen = (props) => {
           }
         />
         <Text style={{fontSize: 14, marginBottom: props.nameErr ? 10 : -10, color: 'red'}}>{props.nameErr}</Text>
-
+        
         <TextInput 
           style={styles.input}
           placeholder="안동대학교 이메일"
@@ -74,7 +86,8 @@ export default RegisterScreen = (props) => {
           autoCapitalize='none'
           autoCorrect={false}
           blurOnSubmit={false}
-          //onBlur={() => {props.validateEmail(email)}}
+          onBlur={() => {setEmailFocus(false)}}
+          onFocus={() => {setEmailFocus(true)}}
           onChangeText={text => {setEmail(text)}}
           onSubmitEditing={() => {this.thirdTextInput.focus()}}
           selectionColor="#292929"
@@ -101,7 +114,8 @@ export default RegisterScreen = (props) => {
           autoCapitalize='none'
           autoCorrect={false}
           blurOnSubmit={false}
-          //onBlur={() => {props.validatePassword(password)}}
+          onBlur={() => {setPasswordFocus(false)}}
+          onFocus={() => {setPasswordFocus(true)}}
           onChangeText={text => {setPassword(text)}}
           onSubmitEditing={() => {this.fourthTextInput.focus()}}
           selectionColor="#292929"
@@ -129,7 +143,8 @@ export default RegisterScreen = (props) => {
           autoCapitalize='none'
           autoCorrect={false}
           blurOnSubmit={false}
-          //onBlur={() => {props.validateRePassword(password, confirmPassword)}}
+          onBlur={() => {setConfirmPasswordFocus(false)}}
+          onFocus={() => {setConfirmPasswordFocus(true)}}
           onChangeText={text => {setConfirmPassword(text)}}
           onSubmitEditing={() => {props.createUser(nickname, email, password, confirmPassword)}}
           selectionColor="#292929"
