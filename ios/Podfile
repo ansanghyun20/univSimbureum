@@ -14,7 +14,7 @@ target 'univSimbureum' do
   pod 'Firebase/Analytics' 
   pod 'Firebase/Core'
   pod 'Firebase/Messaging'
-
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 
   target 'univSimbureumTests' do
