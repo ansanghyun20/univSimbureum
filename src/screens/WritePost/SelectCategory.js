@@ -18,9 +18,9 @@ export default SelectCategory = (props) => {
             <ScrollView style={{backgroundColor: '#53B77C' ,borderRadius: 10}}>
                 <View style={[styles.centerView, { marginTop: 20}]}>
                     <View >
-                        <TouchableOpacity style={[styles.boxView]} onPress={() => {props.setCategory("검색")}}>
-                            <Text style={styles.itemText}>검색</Text>
-                            <Text style={styles.itemTextContent}>검색해 주세요.</Text>
+                        <TouchableOpacity style={[styles.boxView]} onPress={() => {props.setCategory("탐색")}}>
+                            <Text style={styles.itemText}>탐색</Text>
+                            <Text style={styles.itemTextContent}>물건을 찾아주세요.</Text>
                             <Image
                                 source={require('../../assets/img/Search.png')}
                                 style={[styles.item]}

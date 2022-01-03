@@ -18,6 +18,8 @@ import ResetInfoAction from './src/actions/ResetMyInfoAction';
 import WritePost from './src/actions/WritePostAction/WritePostAction';
 import InputPrice from './src/screens/WritePost/InputPrice';
 import SelectCategory from './src/screens/WritePost/SelectCategory';
+import WriteTitle from './src/screens/WritePost/WriteTitle';
+import WriteContent from './src/screens/WritePost/WriteContent';
 const Stack = createStackNavigator();
 
 export default App = () => {
@@ -40,6 +42,9 @@ export default App = () => {
 
         <Stack.Screen name="SelectCategory" component={SelectCategory} />
         <Stack.Screen name="InputPrice" component={InputPrice} />
+        <Stack.Screen name="WriteTitle" component={WriteTitle} />
+        <Stack.Screen name="WriteContent" component={WriteContent} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
