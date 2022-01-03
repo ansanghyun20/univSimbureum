@@ -8,18 +8,19 @@ import Container from '../components/Container';
 
 
 export default ResetMyInfoScreen = (props) => {
+    const [email, setEmail] = useState("");
     const [emailFocus, setEmailFocus] = useState(false);
 
     return (
         <Container>
             <View style={styles.titleWrapper}>
-                <Text style={{alignSelf:'center', fontSize:24, marginBottom: 30}}>이메일 입력</Text>
+                <Text style={{alignSelf:'center', fontSize:18, marginBottom: 30}}>이메일을 입력해 주세요.</Text>
             </View>
             <View style={styles.inputWrapper}>
                 <TextInput
                 style={emailFocus ? styles.focusedInput : styles.input}
                 placeholder="Email"
-                //value={email}
+                value={email}
                 autoCapitalize='none'
                 autoCorrect={false}
                 blurOnSubmit={false}
@@ -35,7 +36,19 @@ export default ResetMyInfoScreen = (props) => {
                 theme={{ roundness: 7, colors: {text: emailFocus ? "black" : "#999899", placeholder: emailFocus ? "transparent" : "#999899"} }}
                 left={<TextInput.Icon name={() => <AntDesignIcon name="user" size={20} color="#53B77C" />} />}
                 />
+                <Text style={{
+                  fontSize: 14, 
+                  marginLeft: 10, 
+                  marginBottom: props.err ? 30 : 0, 
+                  color: 'red'
+                }}>
+                {props.err}
+                </Text>
+                <TouchableOpacity style={[styles.squareButton, {marginBottom: 35}]} onPress={() => {props.findPassword(email), console.log("helo")}}>
+                  <Text style={styles.squareButtonText}>ResetPW</Text>
+                </TouchableOpacity>
             </View>
+            
         </Container>
     );
 

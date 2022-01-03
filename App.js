@@ -13,6 +13,11 @@ import FindPwAction from './src/actions/FindPwAction';
 
 import ResetInfoAction from './src/actions/ResetMyInfoAction';
 
+
+
+import WritePost from './src/actions/WritePostAction/WritePostAction';
+import InputPrice from './src/screens/WritePost/InputPrice';
+import SelectCategory from './src/screens/WritePost/SelectCategory';
 const Stack = createStackNavigator();
 
 export default App = () => {
@@ -29,6 +34,12 @@ export default App = () => {
         <Stack.Screen name="Register" component={RegisterAction} />
         <Stack.Screen name="FindPw" component={FindPwAction} />
         <Stack.Screen name="ResetInfo" component={ResetInfoAction} />
+
+
+        <Stack.Screen name="WritePost" component={WritePost} />
+
+        <Stack.Screen name="SelectCategory" component={SelectCategory} />
+        <Stack.Screen name="InputPrice" component={InputPrice} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -82,7 +82,7 @@ export default LoginScreen = (props) => {
       
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <Text style={{fontSize: 16}}>Don't have account? </Text>
-          <TouchableOpacity onPress={() => props.navi.navigate('Register')}>
+          <TouchableOpacity onPress={() => {props.navi.navigate('Register')}}>
             <Text style={styles.textButtonText}>Create a new accont</Text>
           </TouchableOpacity>
         </View>
