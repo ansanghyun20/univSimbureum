@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity,  Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,  Image, Alert } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-
 import Container from '../../components/Container';
+import SelectDropdown from 'react-native-select-dropdown'
 
-import RNPickerSelect from 'react-native-picker-select';
 
 
 export default InputPrice = (props ) => {
@@ -15,6 +14,7 @@ export default InputPrice = (props ) => {
   
   const { category } = props.route.params;
 
+  const priceList = ["1000", "2000", "3000", "4000", "5000"]
 
   useEffect(()=>{ 
     console.log(price);
@@ -31,38 +31,34 @@ export default InputPrice = (props ) => {
         
 
         <View style={styles.inputWrapper}>
-
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <View style={{ width: 250 }}>
-
-              <RNPickerSelect
-                
-                onValueChange={(value) => {setPrice(value)}}
-                fixAndroidTouchableBug={true}
-                items={[
-                  { label: '1000원', value: '1000' },
-                  { label: '2000원', value: '2000' },
-                  { label: '3000원', value: '3000' },
-                  { label: '4000원', value: '4000' },
-                  { label: '5000원', value: '5000' },
-                ]}
-                style={pickerSelectStyles}
-              />
-              
+          <View style={{alignItems: "center", justifyContent: "center",}}>
+          <SelectDropdown
+            data={priceList}
+            onSelect={(selectedItem, index) => {
+              console.log(selectedItem, index)
+              setPrice(selectedItem)
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return selectedItem
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item
+            }}
+          />
           </View>
-        </View>
-          
-
-
         </View>
 
         <View>
           <TouchableOpacity style={[{marginTop: 30, marginBottom: 100, alignItems: 'center', justifyContent: 'center'}]} onPress={() => { 
               if(price){
-                props.navigation.navigate('WriteTitle', {category: category,price: price,})  
+                props.navigation.navigate('WriteTitle', {category: category,price: price,}) 
               }
               else{
-                alert("선택해주세요.")
+                alert("선택해 주세요.")
               }
             }}>
             <Image

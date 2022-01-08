@@ -14,7 +14,7 @@ export default WriteContent = (props) => {
   
   const [contentFocus, setContentFocus] = useState("");
   
-  const { category, price, mainTitle } = props.route.params;
+  const { category, price, title } = props.route.params;
     ////<Text>{category} {price} {mainTitle}</Text>
 
     useEffect(()=>{ 
@@ -58,8 +58,8 @@ export default WriteContent = (props) => {
 
             <TouchableOpacity style={[{marginTop: 30, marginBottom: 100, alignItems: 'center', justifyContent: 'center'}]} onPress={() => { 
               if(content){
-                props.navigation.navigate('WriteContent', {category: category, price: price, mainTitle: title, })
-                alert("완료")
+                props.navigation.navigate('SelectStartDate', {category: category, price: price, title: title, content: content, })
+               
               }
               else{
                 alert("최소 한글자 이상 작성해 주세요.")

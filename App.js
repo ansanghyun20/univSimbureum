@@ -20,6 +20,9 @@ import InputPrice from './src/screens/WritePost/InputPrice';
 import SelectCategory from './src/screens/WritePost/SelectCategory';
 import WriteTitle from './src/screens/WritePost/WriteTitle';
 import WriteContent from './src/screens/WritePost/WriteContent';
+import SelectStartDate from './src/screens/WritePost/SelectStartDate';
+import SelectStartTime from './src/screens/WritePost/SelectStartTime';
+
 const Stack = createStackNavigator();
 
 export default App = () => {
@@ -44,7 +47,9 @@ export default App = () => {
         <Stack.Screen name="InputPrice" component={InputPrice} />
         <Stack.Screen name="WriteTitle" component={WriteTitle} />
         <Stack.Screen name="WriteContent" component={WriteContent} />
-
+        
+        <Stack.Screen name="SelectStartDate" component={SelectStartDate} />
+        <Stack.Screen name="SelectStartTime" component={SelectStartTime} />
       </Stack.Navigator>
     </NavigationContainer>
   );

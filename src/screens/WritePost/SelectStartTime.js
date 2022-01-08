@@ -1,3 +1,6 @@
+import {LocaleConfig, Calendar} from 'react-native-calendars';
+
+
 import React, { useState, useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
 
@@ -7,56 +10,59 @@ import { Platform, StyleSheet, Text, View, TouchableOpacity, Image } from 'react
 import { TextInput } from 'react-native-paper';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-
-export default WriteTitle = (props) => {
+import DateTimePicker from '@react-native-community/datetimepicker';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+export default SelectStartTime = (props) => {
   
-  const [title, setTitle] = useState("");
+  const [time, setTime] = useState("");
+  
+  const [timeFocus, setTimeFocus] = useState("");
+  
+  const { category, price, title, content, startDate} = props.route.params;
 
-  const [titleFocus, setTitleFocus] = useState(false);
-  const { category, price } = props.route.params;
-    ////<Text>{category} {price}</Text>
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
 
-  useEffect(()=>{ 
-    console.log("제목 작성 : " + title);
-    console.log("----------------------------");
-  }, [title])
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+    console.log(currentDate)
+  };
+
+
+
+
   return (
+      
     <Container>
       <View style={styles.titleMargin}>
         <View style={styles.titleWrapper}>
-            <Text style={styles.title}>제목</Text>
-            <Text style={styles.subTitle}>게시글의 제목을 작성해 주세요.</Text>
-        </View>
+            <Text style={styles.title}>종료 시간</Text>
 
-        <View style={styles.inputWrapper}>
+            <Text style={styles.subTitle}>종료 시간을 선택해 주세요.</Text>
+
             
+        </View>
+      
+        <RNDateTimePicker 
+          display="spinner"
+          value={date}
+          onChange={onChange}
+          mode='time'
+          is24Hour={true}
+          />
 
-            <TextInput
-                style={titleFocus ? styles.focusedInput : styles.input}
-
-                placeholder="Title"
-                autoCapitalize='none'
-                autoCorrect={false}
-                blurOnSubmit={false}
-                onFocus={() => {setTitleFocus(true)}}
-                onBlur={() => {setTitleFocus(false)}}
-                onChangeText={text => setTitle(text)}
-                //onSubmitEditing={() => { this.secondTextInput.focus(); }}
-                returnKeyType="next"
-                selectionColor="#292929"
-                // react-native-paper
-                underlineColor='transparent'
-                activeUnderlineColor="transparent"
-                theme={{ roundness: 7, colors: {text: setTitleFocus ? "black" : "#999899", placeholder: setTitleFocus ? "transparent" : "#999899"} }}
-                left={<TextInput.Icon name={() => <AntDesignIcon name="right" size={20} color="#53B77C" />} />}
-            />
-
+          <Text>{category}, {price}, {title}, {content}, {startDate}</Text>
+        <View style={styles.inputWrapper}>
+        
             <TouchableOpacity style={[{marginTop: 30, marginBottom: 100, alignItems: 'center', justifyContent: 'center'}]} onPress={() => { 
-              if(title){
-                props.navigation.navigate('WriteContent', {category: category, price: price, title: title, })  
-                
+              if(time){
+                props.navigation.navigate('', {category: category, price: price, title: title, content: content, startDate: startDate, })
+                alert("완료")
               }
               else{
+                console.log(category, price, title, content)
                 alert("최소 한글자 이상 작성해 주세요.")
               }
             }}>
@@ -65,7 +71,7 @@ export default WriteTitle = (props) => {
               source={require('../../assets/img/Ok.png')}
               
             />
-          </TouchableOpacity>
+            </TouchableOpacity>
         </View>
       </View>
     </Container>
@@ -76,7 +82,7 @@ export default WriteTitle = (props) => {
 
 const styles = StyleSheet.create({
     titleMargin: {
-        marginTop: "20%"
+        marginTop: "5%"
       },
       titleWrapper: {
         marginTop: Platform.OS === "ios" ? "10%" : "5%",
@@ -91,7 +97,7 @@ const styles = StyleSheet.create({
         padding: 10,
       },
       subTitle: {
-        marginBottom: 20,
+        marginBottom: 0,
         fontFamily: 'Roboto',
         color: 'black',
         fontSize: 18,

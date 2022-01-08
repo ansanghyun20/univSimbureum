@@ -1,3 +1,6 @@
+import {LocaleConfig, Calendar} from 'react-native-calendars';
+
+
 import React, { useState, useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
 
@@ -7,59 +10,93 @@ import { Platform, StyleSheet, Text, View, TouchableOpacity, Image } from 'react
 import { TextInput } from 'react-native-paper';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import { getCalendarDateString } from 'react-native-calendars/src/services';
 
-export default WriteTitle = (props) => {
+export default SelectStartDate = (props) => {
   
-  const [title, setTitle] = useState("");
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth()+1 > 9 ? now.getMonth() +1 : "0" + (now.getMonth() +1)
+  const day = now.getDate() > 9 ? now.getDate() : "0" + (now.getDate())
+  const current = year + "-" + month + "-" + day
 
-  const [titleFocus, setTitleFocus] = useState(false);
-  const { category, price } = props.route.params;
-    ////<Text>{category} {price}</Text>
+  var [startDate, setStartDate] = useState("");
+  
+  
+  const [markedDates, setMarkedDates] = React.useState(null);
+  var [dates, setDates] = React.useState([""]);
 
-  useEffect(()=>{ 
-    console.log("제목 작성 : " + title);
-    console.log("----------------------------");
-  }, [title])
+  const { category, price, title, content} = props.route.params;
+    ////<Text>{category} {price} {mainTitle}</Text>
+    LocaleConfig.locales['fr'] = {
+        monthNames: [
+          'jan',
+          'Février',
+          'Mars',
+          'Avril',
+          'Mai',
+          'Juin',
+          'Juillet',
+          'Août',
+          'Septembre',
+          'Octobre',
+          'Novembre',
+          'Décembre'
+        ],
+        monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+        dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+        dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+        today: "Aujourd'hui"
+      };
+      LocaleConfig.defaultLocale = 'fr';
+      
+      function addDates(date) {
+        let obj = date.reduce(
+          (c, v) =>
+            Object.assign(c, {
+            [v]: { selected: true },
+            }),
+          {},
+        );
+        console.log(obj);
+        setMarkedDates(obj);
+      }
+        
+        
+        
   return (
+      
     <Container>
       <View style={styles.titleMargin}>
         <View style={styles.titleWrapper}>
-            <Text style={styles.title}>제목</Text>
-            <Text style={styles.subTitle}>게시글의 제목을 작성해 주세요.</Text>
+            <Text style={styles.title}>종료 날짜</Text>
+
+            <Text style={styles.subTitle}>종료되는 날짜를 정해주세요.</Text>
+            <Text style={styles.subTitle}>{current}</Text>
         </View>
 
         <View style={styles.inputWrapper}>
             
-
-            <TextInput
-                style={titleFocus ? styles.focusedInput : styles.input}
-
-                placeholder="Title"
-                autoCapitalize='none'
-                autoCorrect={false}
-                blurOnSubmit={false}
-                onFocus={() => {setTitleFocus(true)}}
-                onBlur={() => {setTitleFocus(false)}}
-                onChangeText={text => setTitle(text)}
-                //onSubmitEditing={() => { this.secondTextInput.focus(); }}
-                returnKeyType="next"
-                selectionColor="#292929"
-                // react-native-paper
-                underlineColor='transparent'
-                activeUnderlineColor="transparent"
-                theme={{ roundness: 7, colors: {text: setTitleFocus ? "black" : "#999899", placeholder: setTitleFocus ? "transparent" : "#999899"} }}
-                left={<TextInput.Icon name={() => <AntDesignIcon name="right" size={20} color="#53B77C" />} />}
-            />
+        
+        <Calendar
+            minDate='2022-01-08'
+            onDayPress={day => {
+                setStartDate(day["dateString"])
+                console.log(startDate);
+                addDates([day["dateString"]]);
+            }}
+            markedDates={markedDates}
+        />
 
             <TouchableOpacity style={[{marginTop: 30, marginBottom: 100, alignItems: 'center', justifyContent: 'center'}]} onPress={() => { 
-              if(title){
-                props.navigation.navigate('WriteContent', {category: category, price: price, title: title, })  
-                
+              if(startDate){
+                props.navigation.navigate('SelectStartTime', {category: category, price: price, title: title, content: content, startDate: startDate,  })
               }
               else{
-                alert("최소 한글자 이상 작성해 주세요.")
+                alert("선택해 주세요.")
               }
             }}>
+                <Text>{startDate}</Text>
             <Image
               style = {styles.item}
               source={require('../../assets/img/Ok.png')}
@@ -76,7 +113,7 @@ export default WriteTitle = (props) => {
 
 const styles = StyleSheet.create({
     titleMargin: {
-        marginTop: "20%"
+        marginTop: "5%"
       },
       titleWrapper: {
         marginTop: Platform.OS === "ios" ? "10%" : "5%",
@@ -91,7 +128,7 @@ const styles = StyleSheet.create({
         padding: 10,
       },
       subTitle: {
-        marginBottom: 20,
+        marginBottom: 0,
         fontFamily: 'Roboto',
         color: 'black',
         fontSize: 18,

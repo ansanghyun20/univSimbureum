@@ -25,7 +25,6 @@ export default SelectCategory = (props) => {
                                 source={require('../../assets/img/Search.png')}
                                 style={[styles.item]}
                             />
-                            
                         </TouchableOpacity>
                     </View>
                     <View >
@@ -36,7 +35,6 @@ export default SelectCategory = (props) => {
                                 source={require('../../assets/img/Chat.png')}
                                 style={[styles.item]}
                             />
-                            
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -50,7 +48,6 @@ export default SelectCategory = (props) => {
                                 source={require('../../assets/img/Folder.png')}
                                 style={[styles.item]}
                             />
-                            
                         </TouchableOpacity>
                     </View>
                     <View >
@@ -61,7 +58,6 @@ export default SelectCategory = (props) => {
                                 source={require('../../assets/img/Home.png')}
                                 style={[styles.item]}
                             />
-                            
                         </TouchableOpacity>
                     </View>
                     
@@ -76,7 +72,6 @@ export default SelectCategory = (props) => {
                                 source={require('../../assets/img/Pen.png')}
                                 style={[styles.item]}
                             />
-                            
                         </TouchableOpacity>
                     </View>
                     <View >
@@ -101,7 +96,6 @@ export default SelectCategory = (props) => {
                                 source={require('../../assets/img/Box.png')}
                                 style={[styles.item]}
                             />
-
                         </TouchableOpacity>
                     </View>
 
@@ -114,7 +108,6 @@ export default SelectCategory = (props) => {
                                 source={require('../../assets/img/Idea.png')}
                                 style={[styles.item]}
                             />
-                            
                         </TouchableOpacity>
                     </View>
                 </View>
