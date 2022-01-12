@@ -1,5 +1,6 @@
 import {LocaleConfig, Calendar} from 'react-native-calendars';
 
+import firestore from '@react-native-firebase/firestore';
 
 import React, { useState, useEffect } from 'react';
 import auth from '@react-native-firebase/auth';
@@ -14,14 +15,14 @@ import { getCalendarDateString } from 'react-native-calendars/src/services';
 
 export default SelectStartDate = (props) => {
   
-  const now = new Date()
+  var now = new Date()
   const year = now.getFullYear()
   const month = now.getMonth()+1 > 9 ? now.getMonth() +1 : "0" + (now.getMonth() +1)
   const day = now.getDate() > 9 ? now.getDate() : "0" + (now.getDate())
   const current = year + "-" + month + "-" + day
-
+  console.log(current)
   var [startDate, setStartDate] = useState("");
-  
+  const post = firestore().collection('Posts')
   
   const [markedDates, setMarkedDates] = React.useState(null);
   var [dates, setDates] = React.useState([""]);
@@ -79,7 +80,7 @@ export default SelectStartDate = (props) => {
             
         
         <Calendar
-            minDate='2022-01-08'
+            minDate={current}
             onDayPress={day => {
                 setStartDate(day["dateString"])
                 console.log(startDate);
@@ -90,7 +91,22 @@ export default SelectStartDate = (props) => {
 
             <TouchableOpacity style={[{marginTop: 30, marginBottom: 100, alignItems: 'center', justifyContent: 'center'}]} onPress={() => { 
               if(startDate){
-                props.navigation.navigate('SelectStartTime', {category: category, price: price, title: title, content: content, startDate: startDate,  })
+                post
+                .add({
+                  category: category,
+                  price: price,
+                  title: title,
+                  content: content,
+                  endDate: startDate,
+                })
+                .then(() => {
+                    props.navigation.navigate("Home")
+                    console.log('post added!');
+                })
+                .catch(error => {console.error(error);})
+                
+
+                //props.navigation.navigate('SelectStartTime', {category: category, price: price, title: title, content: content, startDate: startDate,  })
               }
               else{
                 alert("선택해 주세요.")
