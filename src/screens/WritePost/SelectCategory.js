@@ -28,9 +28,9 @@ export default SelectCategory = (props) => {
                         </TouchableOpacity>
                     </View>
                     <View >
-                        <TouchableOpacity style={[styles.boxView]} onPress={() => {props.setCategory("대화")}}>
-                            <Text style={styles.itemText}>대화</Text>
-                            <Text style={styles.itemTextContent}>상대방과 대화하세요.</Text>
+                        <TouchableOpacity style={[styles.boxView]} onPress={() => {props.setCategory("기타")}}>
+                            <Text style={styles.itemText}>기타</Text>
+                            <Text style={styles.itemTextContent}>기타 입니다.</Text>
                             <Image
                                 source={require('../../assets/img/Chat.png')}
                                 style={[styles.item]}

@@ -72,7 +72,7 @@ export default LoginScreen = (props) => {
       </View>
 
       <View style={styles.buttonWrapper}>
-        <TouchableOpacity style={{alignSelf: 'flex-end', marginBottom: 30}} onPress={() => props.navi.navigate('ResetInfo')} >
+        <TouchableOpacity style={{alignSelf: 'flex-end', marginBottom: 30}} onPress={() => props.navi.navigate('FindPw')} >
           <Text style={styles.textButtonText}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -82,11 +82,10 @@ export default LoginScreen = (props) => {
       
         <View style={{flexDirection: 'row', justifyContent: 'center'}}>
           <Text style={{fontSize: 16}}>Don't have account? </Text>
-          <TouchableOpacity onPress={() => {props.navi.navigate('Register')}}>
+          <TouchableOpacity onPress={() => props.navi.navigate('Register')}>
             <Text style={styles.textButtonText}>Create a new accont</Text>
           </TouchableOpacity>
         </View>
-
       </View>
     </Container>
   );

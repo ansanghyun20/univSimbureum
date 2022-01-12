@@ -20,6 +20,7 @@ export default SelectStartDate = (props) => {
   const month = now.getMonth()+1 > 9 ? now.getMonth() +1 : "0" + (now.getMonth() +1)
   const day = now.getDate() > 9 ? now.getDate() : "0" + (now.getDate())
   const current = year + "-" + month + "-" + day
+  const currentDateForDB = year + "/" + month + "/" + day
   console.log(current)
   var [startDate, setStartDate] = useState("");
   const post = firestore().collection('Posts')
@@ -93,11 +94,13 @@ export default SelectStartDate = (props) => {
               if(startDate){
                 post
                 .add({
+                  //  nickName
                   category: category,
                   price: price,
                   title: title,
                   content: content,
-                  endDate: startDate,
+                  date: startDate.date(),
+                  writergrade: "4.2",   // user grade
                 })
                 .then(() => {
                     props.navigation.navigate("Home")

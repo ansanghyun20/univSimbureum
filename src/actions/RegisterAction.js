@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -10,59 +10,30 @@ export default RegisterAction = (props) => {
     const [isDuplicatedName, setDuplicatedName] = useState(false)
     const [nameIsEdited, setNameEdited] = useState(false)
 
-    const [emailErr, setEmailErr] = useState("")
-    const [emailIsEdited, setEmailEdited] = useState(false)
+    const [idErr, setIdErr] = useState("")
+    const [idIsEdited, setIdEdited] = useState(false)
 
     const [pwErr, setPwErr] = useState("")
     const [pwIsEdited, setPwEdited] = useState(false)
 
     const [rePwErr, setRePwErr] = useState("")
     const [rePwIsEdited, setRePwEdited] = useState(false)
-
+    
     const users = firestore().collection('Users')
-    // useEffect 시작
-    // 각종 Err 변경을 실시간 감지
-      useEffect(()=>{ 
-        console.log("이름 에러 : " + nameErr);
-        if (null == ""){
-            console.log("hello")
-        }
-        console.log("----------------------------");
-      }, [nameErr])
-
-      useEffect(()=>{ 
-        console.log("이메일 에러 : " + emailErr);
-        console.log("----------------------------");
-      }, [emailErr])
-
-
-      useEffect(()=>{ 
-        console.log("비번 에러 : " + pwErr);
-        console.log("----------------------------");
-      }, [pwErr])
-
-
-      useEffect(()=>{ 
-        console.log("재확인 비번 에러 : " + rePwErr);
-        console.log("----------------------------");
-      }, [rePwErr])  
-
-      useEffect(()=>{ 
+    
+    useEffect(()=>{ 
         if(isDuplicatedName) {
             setNameErr('이미 사용 중인 이름입니다.');
         }
-        console.log("중복 에러 : " + isDuplicatedName);
-        console.log("----------------------------");
-      }, [isDuplicatedName])
-      // useEffect 종료
+    }, [isDuplicatedName])
     
-
-
+    
     const validateName = (nickname) => {
+        var nameReg = /^[a-zA-Z0-9ㄱ-힣-_.]{2,10}$/;
 
-        var nicknameReg  =  /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/
         setNameEdited(true)
 
+        // 닉네임 중복 검사
         users
         .where('nickname', '==', nickname)
         .get()
@@ -73,38 +44,27 @@ export default RegisterAction = (props) => {
                 setDuplicatedName(false);
                 if(!nickname) {
                     setNameErr('이름을 입력해주세요.');
-                }
-                else if(!nicknameReg.test(nickname)){
-                    setNameErr('글자 수 (2~20자 이내)');
-                }else {
-                    setNameErr(null);
+                } else if (!nameReg.test(nickname)) {
+                    setNameErr('2~10자 한글, 영문, 숫자, 특수문자 -_.만 사용 가능');
+                } else {
+                    setNameErr("");
                 }
             }
         })
-        
-        
-        
-        console.log("이름 : " + nickname);
-        console.log("----------------------------");
-        
-    };
+    }
     
-    const validateEmail = (email) => {
-        var emailReg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+    const validateId = (id) => {
+        var idReg = /^[A-Za-z0-9]{5,15}$/g;
 
-        setEmailEdited(true)
+        setIdEdited(true)
 
-        if(!email) {
-            setEmailErr('이메일를 입력해주세요.');
-        } else if (!emailReg.test(email)) {
-            setEmailErr('이메일 형식을 올바르게 입력해주세요.');
+        if(!id) {
+            setIdErr('이메일을 입력해주세요.');
+        } else if (!idReg.test(id)) {
+            setIdErr('이메일이 올바르지 않습니다.');
         } else {
-            setEmailErr(null);
+            setIdErr("");
         }
-
-        console.log("이메일 : " + email);
-        
-        console.log("----------------------------");
     }
     
     const validatePassword = (password) => {
@@ -117,11 +77,8 @@ export default RegisterAction = (props) => {
         } else if (!pwReg.test(password)) {
             setPwErr('영문, 숫자, 특수문자를 모두 포함 (6~16자 이내)');
         } else {
-            setPwErr(null);
+            setPwErr("");
         }
-
-        console.log("비번 : " + password);
-        console.log("----------------------------");
     }
 
     const validateRePassword = (password, confirmPassword) => {
@@ -132,47 +89,46 @@ export default RegisterAction = (props) => {
         } else if(confirmPassword !== password) {
             setRePwErr('비밀번호가 일치하지 않습니다.');
         } else {
-            setRePwErr(null);
+            setRePwErr("");
         }
-
-        console.log("재확인 비번 : " + confirmPassword);
-        console.log("----------------------------");
     }
 
-    const createUser = (nickname, email, password, confirmPassword) => {
-        validateName(nickname);
-        validateEmail(email);
-        validatePassword(password);
-        validateRePassword(password, confirmPassword);
-        // console.log("email : "+ email + "password : "+ password);
-        // console.log("nameErr : "+ nameErr + "emailErr : "+ emailErr);
-        // console.log("pwErr : "+ pwErr + "rePwErr : "+ rePwErr);
-        console.log("회원가입 기능 실행")
+    const createUser = (nickname, id, password, confirmPassword) => {
+        var email = id + "@student.anu.ac.kr";
 
-        if(!nickname || !confirmPassword || !email || !password || nameErr || emailErr || pwErr || rePwErr) {
-            console.log("통과 X")
+        validateName(nickname)
+        validateId(id)
+        validatePassword(password)
+        validateRePassword(password, confirmPassword)
+
+        if(!nickname || !id || !password || !confirmPassword || nameErr || idErr || pwErr || rePwErr) {
             return false;
         } else {
-            console.log("통과 O")
             auth()
             // auth로 이메일, 비밀번호 회원가입
             .createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // firestore에 이메일, 닉네임, 등급 저장 (이부분 수정 필요)
-                users
-                .add({
+            .then(async (userCredential) => {
+                // firestore에 이메일, 닉네임, 등급 저장
+                await users
+                .doc(email)
+                .set({
                     email: email,
                     nickname: nickname,
-                    grade: 1,
+                    grade: 2.3,
                 })
-                .then(() => {
-                    console.log('User added!');
-                })
-                .catch(error => {console.error(error);})
-                auth().signOut();
+                .then(() => console.log('User added!'))
+                .catch(error => console.error(error));
+                
+                // auth에도 아이디, 비번 뿐 아니라 닉네임도 저장
+                auth()
+                .currentUser
+                .updateProfile({
+                    displayName: nickname
+                });
+
                 // 인증 메일 전송
                 userCredential.user?.sendEmailVerification();
-                //auth().signOut();
+                auth().signOut();
                 Alert.alert(
                     "이메일 인증",
                     "인증 메일을 전송하였습니다.\n전송된 이메일의 링크를 클릭하면 회원가입이 완료됩니다.",
@@ -185,10 +141,10 @@ export default RegisterAction = (props) => {
             })
             .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
-                    setEmailErr('이미 사용 중인 이메일입니다.');
+                    setIdErr('이미 사용 중인 이메일입니다.');
                 }
                 if (error.code === 'auth/invalid-email') {
-                    setEmailErr('유효하지 않은 이메일 주소입니다.');
+                    setIdErr('유효하지 않은 이메일 주소입니다.');
                 }
             })
         }
@@ -196,17 +152,17 @@ export default RegisterAction = (props) => {
     
     return <RegisterScreen 
             nameIsEdited={nameIsEdited}
-            emailIsEdited={emailIsEdited}
+            idIsEdited={idIsEdited}
             pwIsEdited={pwIsEdited}
             rePwIsEdited={rePwIsEdited}
 
             nameErr={nameErr} 
-            emailErr={emailErr} 
+            idErr={idErr} 
             pwErr={pwErr} 
             rePwErr={rePwErr}
 
             validateName={validateName}
-            validateEmail={validateEmail}
+            validateId={validateId}
             validatePassword={validatePassword}
             validateRePassword={validateRePassword}
 
