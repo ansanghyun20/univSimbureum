@@ -17,6 +17,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import Feed from './src/screens/FeedScreen';
 import FeedAction from './src/actions/FeedAction';
 import Mypage from './src/screens/MypageScreen';
+import ShowDetailPost from './src/screens/ShowDetailPost';
+// import ShowDetailPost from './src/screens/ShowDetailPost';
 // import Login from './src/screens/LoginScreen';
 import LoginAction from './src/actions/LoginAction';
 // import Register from './src/screens/RegisterScreen';
@@ -45,11 +47,6 @@ export default App = () => {
         <Stack.Screen name="Register" component={RegisterAction} />
         <Stack.Screen name="FindPw" component={FindPwAction} />
 
-        {/* <Stack.Screen name="Home" component={Mypage} options={{headerShown: false}} /> */}
-        {/* <Stack.Screen name="Login" component={LoginAction} />
-        <Stack.Screen name="Register" component={RegisterAction} />
-        <Stack.Screen name="FindPw" component={FindPwAction} />
-        <Stack.Screen name="ResetInfo" component={ResetInfoAction} /> */}
 
 
         <Stack.Screen name="WritePost" component={WritePost} />
@@ -61,6 +58,9 @@ export default App = () => {
         
         <Stack.Screen name="SelectStartDate" component={SelectStartDate} />
         <Stack.Screen name="SelectStartTime" component={SelectStartTime} />
+
+        <Stack.Screen name="ShowDetailPost" component={ShowDetailPost} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

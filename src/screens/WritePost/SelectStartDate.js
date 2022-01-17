@@ -8,10 +8,6 @@ import auth from '@react-native-firebase/auth';
 import Container from '../../components/Container';
 
 import { Platform, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import { getCalendarDateString } from 'react-native-calendars/src/services';
 
 export default SelectStartDate = (props) => {
   
@@ -20,16 +16,44 @@ export default SelectStartDate = (props) => {
   const month = now.getMonth()+1 > 9 ? now.getMonth() +1 : "0" + (now.getMonth() +1)
   const day = now.getDate() > 9 ? now.getDate() : "0" + (now.getDate())
   const current = year + "-" + month + "-" + day
-  const currentDateForDB = year + "/" + month + "/" + day
-  console.log(current)
-  var [startDate, setStartDate] = useState("");
+
+  var [startDate, setStartDate] = useState();
+
+  var [endDate, setEndDate] = useState();
+
   const post = firestore().collection('Posts')
   
   const [markedDates, setMarkedDates] = React.useState(null);
-  var [dates, setDates] = React.useState([""]);
 
   const { category, price, title, content} = props.route.params;
-    ////<Text>{category} {price} {mainTitle}</Text>
+
+  const [user, setUser] = useState();
+
+  const [userGrade, setUserGrade] = useState();
+
+  const users = firestore().collection('Users')
+
+    useEffect(() => {
+        auth().onAuthStateChanged(user => {
+          if (user) {
+            setUser(user);
+            users
+        .where('nickname', '==', user["displayName"])
+        .get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(function(doc) {
+                setUserGrade(doc.data()["grade"])
+              })
+            })
+          }
+          else {
+            setUser(null)
+          }
+        })
+      });
+      
+      
+    
     LocaleConfig.locales['fr'] = {
         monthNames: [
           'jan',
@@ -83,8 +107,8 @@ export default SelectStartDate = (props) => {
         <Calendar
             minDate={current}
             onDayPress={day => {
-                setStartDate(day["dateString"])
-                console.log(startDate);
+                setStartDate(Date.parse(new Date()))
+                setEndDate(Date.parse(new Date([day["dateString"]])))
                 addDates([day["dateString"]]);
             }}
             markedDates={markedDates}
@@ -94,13 +118,15 @@ export default SelectStartDate = (props) => {
               if(startDate){
                 post
                 .add({
-                  //  nickName
+                  nickName : user["displayName"], 
                   category: category,
                   price: price,
                   title: title,
                   content: content,
-                  date: startDate.date(),
-                  writergrade: "4.2",   // user grade
+                  date: new Date(startDate),
+                  endDate: new Date(endDate),
+                  writergrade: userGrade,   // user grade
+                  process: "regist" // regist, matching, finished
                 })
                 .then(() => {
                     props.navigation.navigate("Home")

@@ -103,7 +103,7 @@ export default RegisterScreen = (props) => {
               />
             }
           />
-          <Text style={{fontSize: 16, paddingBottom: 12}}> @student.anu.ac.kr</Text>
+          <Text style={{fontSize: 16, paddingBottom: 12}}> @gmail.com</Text>
         </View>
         <Text style={{fontSize: 14, marginBottom: props.idErr ? 10 : -10, color: 'red'}}>{props.idErr}</Text>
 

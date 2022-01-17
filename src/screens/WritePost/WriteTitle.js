@@ -14,7 +14,6 @@ export default WriteTitle = (props) => {
 
   const [titleFocus, setTitleFocus] = useState(false);
   const { category, price } = props.route.params;
-    ////<Text>{category} {price}</Text>
 
   useEffect(()=>{ 
     console.log("제목 작성 : " + title);

@@ -94,7 +94,7 @@ export default RegisterAction = (props) => {
     }
 
     const createUser = (nickname, id, password, confirmPassword) => {
-        var email = id + "@student.anu.ac.kr";
+        var email = id + "@gmail.com";
 
         validateName(nickname)
         validateId(id)
@@ -114,7 +114,7 @@ export default RegisterAction = (props) => {
                 .set({
                     email: email,
                     nickname: nickname,
-                    grade: 2.3,
+                    grade: 2.3,     
                 })
                 .then(() => console.log('User added!'))
                 .catch(error => console.error(error));
